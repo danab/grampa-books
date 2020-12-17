@@ -35,7 +35,7 @@ COPY ./src /opt/api/src
 RUN sed -i -e 's/\r$//' /opt/api/docker-entrypoint.sh && chmod +x /opt/api/docker-entrypoint.sh
 
 
-EXPOSE 5044
+EXPOSE 5042
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD [""]
