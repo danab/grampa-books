@@ -7,15 +7,15 @@ services:
       - gateway
     ports:
       - "5042:5042"
-  # app:
-  #   build: "./frontend"
-  #   depends_on:
-  #     - webserver
-  #   networks:
-  #     - gateway
-  #   tty: true
-  #   volumes:
-  #     - static-content1:/opt/app/pdnotes
+  app:
+    build: "./frontend"
+    depends_on:
+      - webserver
+    networks:
+      - gateway
+    tty: true
+    volumes:
+      - static-content1:/opt/app/gramps
   webserver:
     build: "./webserver"
     networks:
@@ -23,7 +23,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - static-content1:/opt/app/pdnotes
+      - static-content1:/opt/app/gramps
 networks:
   gateway: {}
 volumes:
