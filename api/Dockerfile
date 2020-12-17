@@ -22,6 +22,7 @@ FROM python:3.8.2-slim-buster
 WORKDIR /opt/api
 
 RUN pip install pipenv 
+RUN pip install uvloop 
 
 COPY ./Pipfile.lock  /opt/api
 COPY ./Pipfile  /opt/api

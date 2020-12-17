@@ -4,11 +4,21 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+alembic = "*"
+black = "*"
+flake8 = "*"
 
 [packages]
-fastapi = "*"
-sqlalchemy = "*"
-uvicorn = "*"
+aiohttp = "~=3.7.0"
+cachetools = "~=4.1.1"
+fastapi = {extras = ["all"], version = "~=0.61.0"}
+gunicorn = "~=20.0.0"
+httptools = "~=0.1.0"
+python-dotenv = "~=0.14.0"
+SQLAlchemy = "~=1.3.0"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
