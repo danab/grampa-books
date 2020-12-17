@@ -40,7 +40,8 @@ export default {
   },
 
   async mounted() {
-    const { data } = await this.$axios.get('http://localhost:8000/reads/')
+    const { data } = await this.$axios.get('/api/reads/')
+    console.log("what the hey")
 
     this.reads = data
     this.loaded = true
