@@ -1,0 +1,7 @@
+api/sql_app.db
+
+frontend/node_modules
+frontend/dist
+
+.vscode
+**/.vscode

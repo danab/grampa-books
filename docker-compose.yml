@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  api:
+    build: "./api"
+    networks:
+      - gateway
+    ports:
+      - "5042:5042"
+  # app:
+  #   build: "./frontend"
+  #   depends_on:
+  #     - webserver
+  #   networks:
+  #     - gateway
+  #   tty: true
+  #   volumes:
+  #     - static-content1:/opt/app/pdnotes
+  webserver:
+    build: "./webserver"
+    networks:
+      - gateway
+    ports:
+      - "80:80"
+    volumes:
+      - static-content1:/opt/app/pdnotes
+networks:
+  gateway: {}
+volumes:
+  static-content1: {}
