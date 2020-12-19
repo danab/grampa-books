@@ -1,0 +1,43 @@
+<template>
+  <q-page style="margin: auto; max-width: 400px">
+    {{ years }}
+    <router-link v-for="year in years" :to="'/read/' + year.year" class="revert-link" :key="year.year">
+      <q-card class="q-my-md bg-secondary text-white q-pa-lg" flat>
+          <span class="text-h4">{{ year.year }}</span> <span class="text-h5"> - {{ year.num }} books </span>
+      </q-card>
+    </router-link>
+  </q-page>
+</template>
+
+<script>
+export default {
+  name: 'PageRead',
+
+  data() {
+    return {
+      loaded: false,
+      years: []
+    }
+  },
+
+  async mounted() {
+    await this.getYears()
+  },
+
+  methods: {
+    async getYears(year) {
+      this.loaded = false
+      const { data } = await this.$axios.get(`/reads/year`)
+      this.years = data
+      this.loaded = true
+    }
+  },
+}
+</script>
+
+<style lang="sass">
+.revert-link 
+  color: inherit
+  text-decoration: none
+
+</style>

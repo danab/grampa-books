@@ -18,7 +18,7 @@
     </div>
     <div v-if="loaded" class="q-mb-xl"> 
       <div class="text-h2 q-mt-md"> {{ year }} </div>
-      <div class="text-subtitle1 q-mt-sm q-mb-md"> {{ reads.length }} books read </div>
+      <div class="text-subtitle1 q-mt-sm q-mb-md"> {{ reads.length }} {{ reads.length === 1 ? 'book' : 'books' }} {{ reads.length > 0 ? 'read' : 'entered' }} </div>
       <q-card v-for="read in reads" :key="read.book.key" class="col-12 q-mb-sm" flat bordered>
         <q-card-section horizontal>
           <q-card-section class="q-pt-xs">
