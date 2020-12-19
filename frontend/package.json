@@ -8,6 +8,7 @@
   "scripts": {
     "build": "quasar build",
     "lint": "eslint --ext .js,.vue ./",
+    "lint:fix": "eslint --ext .js,.vue ./ --fix",
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
@@ -18,10 +19,12 @@
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-loader": "^3.0.3",
+    "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-vue": "^6.1.2"
   },
   "browserslist": [

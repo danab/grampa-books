@@ -28,10 +28,7 @@
       content-class="bg-grey-1"
     >
       <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
+        <q-item-label header class="text-grey-8">
           Links
         </q-item-label>
         <EssentialLink
@@ -49,31 +46,31 @@
 </template>
 
 <script>
-import EssentialLink from 'components/EssentialLink.vue'
+import EssentialLink from "components/EssentialLink.vue";
 
 const linksData = [
   {
-    title: 'Search',
-    caption: 'Data Entry',
-    icon: 'search',
-    link: '/'
+    title: "Search",
+    caption: "Data Entry",
+    icon: "search",
+    link: "/"
   },
   {
-    title: 'List',
-    caption: 'By Year',
-    icon: 'book',
-    link: '/read'
-  },
+    title: "List",
+    caption: "By Year",
+    icon: "book",
+    link: "/read"
+  }
 ];
 
 export default {
-  name: 'MainLayout',
+  name: "MainLayout",
   components: { EssentialLink },
-  data () {
+  data() {
     return {
       leftDrawerOpen: false,
       essentialLinks: linksData
-    }
+    };
   }
-}
+};
 </script>
