@@ -77,3 +77,13 @@ def create_read(read: schemas.ReadCreate, db: Session = Depends(get_db)):
     if db_read:
         raise HTTPException(status_code=400, detail="read already exists")
     return crud.create_read(db=db, read=read)
+
+
+@app.get("/reads/year", response_model=List[schemas.YearCount])
+def read_years(db: Session = Depends(get_db)):
+    return crud.get_read_years(db)
+
+
+@app.get("/reads/year/{year}", response_model=List[schemas.ReadWithBook])
+def read_single_year(year: int, db: Session = Depends(get_db)):
+    return crud.get_read_year(db, year)

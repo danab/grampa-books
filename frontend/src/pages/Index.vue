@@ -114,14 +114,14 @@ export default {
     // This sucks, update author -> book -> read
     async handleReadSubmit() {
       await Promise.allSettled(this.selectedBook.author_key.map((key, i) => {
-        return this.$axios.post('/api/authors/', {
+        return this.$axios.post('/authors/', {
           ol_id: key,
           name: this.selectedBook.author_name[i],
         })
       }))
 
       try {
-        await this.$axios.post('/api/books/', {
+        await this.$axios.post('/books/', {
           work_id: this.selectedBook.key,
           edition_id: 'edition_id',
           image_id: this.selectedBook.cover_i,
@@ -135,7 +135,7 @@ export default {
       }
 
       try {
-        await this.$axios.post('/api/reads/', {
+        await this.$axios.post('/reads/', {
           date: this.date,
           ol_book_id: this.selectedBook.key,
           submitter_comment: this.submitterComment,

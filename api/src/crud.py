@@ -1,5 +1,6 @@
 import datetime
 
+from sqlalchemy import cast, func, String
 from sqlalchemy.orm import joinedload, Session
 
 from . import models, schemas
@@ -73,3 +74,24 @@ def create_read(db: Session, read: schemas.ReadCreate):
     db.commit()
     db.refresh(db_read)
     return db_read
+
+
+def get_read_years(db: Session):
+    year = func.substr(models.Read.date, 1, 4)
+    return (
+        db.query(year.label("year"), func.count(year).label("num"))
+        .group_by(year)
+        .order_by(year)
+        .all()
+    )
+
+
+def get_read_year(db: Session, year):
+    yearFunc = func.substr(models.Read.date, 1, 4)
+    return (
+        db.query(models.Read)
+        .filter(yearFunc == func.cast(year, String))
+        .options(joinedload(models.Read.book).options(joinedload(models.Book.authors)))
+        .order_by(models.Read.date)
+        .all()
+    )

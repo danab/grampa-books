@@ -60,3 +60,11 @@ class Read(ReadBase):
 
 class ReadWithBook(Read):
     book: BookWithAuthor
+
+
+class YearCount(BaseModel):
+    year: int
+    num: int
+
+    class Config:
+        orm_mode = True
