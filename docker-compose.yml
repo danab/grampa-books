@@ -26,6 +26,8 @@ services:
       - "80:80"
     volumes:
       - static-content1:/opt/app/gramps
+    depends_on:
+      - api
 networks:
   gateway: {}
 volumes:
