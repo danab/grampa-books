@@ -1,4 +1,14 @@
-from sqlalchemy import Boolean, Column, Date, ForeignKey, Integer, String, Table
+from sqlalchemy import (
+    Boolean,
+    Column,
+    Date,
+    DateTime,
+    func,
+    ForeignKey,
+    Integer,
+    String,
+    Table,
+)
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -18,6 +28,7 @@ class Book(Base):
     edition_id = Column(String, index=True)
     title = Column(String, unique=True, index=True)
     image_id = Column(String)
+    created = Column(DateTime, server_default=func.now())
 
     authors = relationship("Author", secondary=association_table)
     reads = relationship("Read", back_populates="book")
@@ -28,6 +39,7 @@ class Author(Base):
 
     ol_id = Column(String, primary_key=True, index=True)
     name = Column(String)
+    created = Column(DateTime, server_default=func.now())
 
     books = relationship("Book", secondary=association_table)
 
@@ -41,5 +53,6 @@ class Read(Base):
     )
     submitter_comment = Column(String)
     initials = Column(String)
+    created = Column(DateTime, server_default=func.now())
 
     book = relationship("Book", back_populates="reads")
