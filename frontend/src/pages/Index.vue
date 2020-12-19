@@ -1,8 +1,8 @@
 <template>
-  <q-page style="margin: auto; max-width: 400px">
+  <q-page class="q-pa-sm" style="margin: auto; max-width: 400px">
     <q-form class="row q-my-md" @submit="handleSearch">
-      <q-input class="col-8" v-model="searchTerm" ref="search" label="Search" />
-      <q-btn class="col-4" label="Submit" type="submit" :loading="loading" unelevated color="primary" />
+      <q-input class="col-8" v-model="searchTerm" ref="search" label="Title and/or Author" />
+      <q-btn class="col-4" label="Search" type="submit" :loading="loading" unelevated color="primary" />
     </q-form>
     <div class="row" v-if="!loading" >
       <q-card v-for="book in filteredResults" :key="book.key" class="col-12 q-mb-sm" flat bordered>
@@ -30,7 +30,7 @@
 
         <q-separator />
 
-        <q-card-actions>
+        <q-card-actions class="row justify-between">
           <q-btn type="a" external target="_BLANK" :href="`https://openlibrary.org${book.key}`" label="More Info" unelevated color="primary" />
           <q-btn unelevated color="secondary" @click="handleSelect(book)">
             Select

@@ -1,6 +1,5 @@
 <template>
   <q-page style="margin: auto; max-width: 400px">
-    {{ years }}
     <router-link v-for="year in years" :to="'/read/' + year.year" class="revert-link" :key="year.year">
       <q-card class="q-my-md bg-secondary text-white q-pa-lg" flat>
           <span class="text-h4">{{ year.year }}</span> <span class="text-h5"> - {{ year.num }} books </span>
@@ -34,10 +33,3 @@ export default {
   },
 }
 </script>
-
-<style lang="sass">
-.revert-link 
-  color: inherit
-  text-decoration: none
-
-</style>

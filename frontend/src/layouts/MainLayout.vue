@@ -12,7 +12,9 @@
         />
 
         <q-toolbar-title>
-          Grampa's Books
+          <router-link class="revert-link" to="/">
+            Grampa's Books
+          </router-link>
         </q-toolbar-title>
 
         <div>v0.1</div>
@@ -50,6 +52,12 @@
 import EssentialLink from 'components/EssentialLink.vue'
 
 const linksData = [
+  {
+    title: 'Search',
+    caption: 'Data Entry',
+    icon: 'search',
+    link: '/'
+  },
   {
     title: 'List',
     caption: 'By Year',
