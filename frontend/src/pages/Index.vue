@@ -1,73 +1,93 @@
 <template>
-  <q-page class="q-pa-sm" style="margin: auto; max-width: 400px">
-    <q-form class="row q-my-md" @submit="handleSearch">
-      <q-input
-        ref="search"
-        v-model="searchTerm"
-        class="col-8"
-        label="Title and/or Author"
-      />
-      <q-btn
-        class="col-4"
-        label="Search"
-        type="submit"
-        :loading="loading"
-        unelevated
-        color="primary"
-      />
-    </q-form>
-    <div v-if="!loading" class="row">
-      <q-card
-        v-for="book in filteredResults"
-        :key="book.key"
-        class="col-12 q-mb-sm"
-        flat
-        bordered
-      >
-        <q-card-section horizontal>
-          <q-card-section class="q-pt-xs">
-            <div class="text-overline">
-              {{ book.author_name && book.author_name[0] }}
-            </div>
-            <div class="text-h5 q-mt-sm q-mb-xs">{{ book.title }}</div>
-            <div class="text-caption text-grey">
-              First Published: {{ book.first_publish_year || " Unknown" }}
-              <!-- <pre>
-                {{ book }}
-              </pre> -->
-            </div>
-          </q-card-section>
-
-          <q-space />
-
-          <q-card-section class="col-4">
-            <q-img
-              class="rounded-borders"
-              :src="`http://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`"
-            />
-          </q-card-section>
-        </q-card-section>
-
-        <q-separator />
-
-        <q-card-actions class="row justify-between">
+  <q-page class="q-pa-sm">
+    <div class="row q-col-gutter-md">
+      <div class="col-8">
+        <q-form class="row q-my-md" @submit="handleSearch">
+          <q-input
+            ref="search"
+            v-model="searchTerm"
+            class="col-8"
+            label="Title and/or Author"
+          />
           <q-btn
-            type="a"
-            external
-            target="_BLANK"
-            :href="`https://openlibrary.org${book.key}`"
-            label="More Info"
+            class="col-4"
+            label="Search"
+            type="submit"
+            :loading="loading"
             unelevated
             color="primary"
           />
-          <q-btn unelevated color="secondary" @click="handleSelect(book)">
-            Select
-          </q-btn>
-        </q-card-actions>
-      </q-card>
-      <!-- {{ book.author_name }}
+        </q-form>
+        <div v-if="!loading" class="row">
+          <q-card
+            v-for="book in filteredResults"
+            :key="book.key"
+            class="col-12 q-mb-sm"
+            flat
+            bordered
+          >
+            <q-card-section horizontal>
+              <q-card-section class="q-pt-xs">
+                <div class="text-overline">
+                  {{ book.author_name && book.author_name[0] }}
+                </div>
+                <div class="text-h5 q-mt-sm q-mb-xs">{{ book.title }}</div>
+                <div class="text-caption text-grey">
+                  First Published: {{ book.first_publish_year || " Unknown" }}
+                  <!-- <pre>
+                {{ book }}
+              </pre> -->
+                </div>
+              </q-card-section>
+
+              <q-space />
+
+              <q-card-section class="col-4">
+                <q-img
+                  class="rounded-borders"
+                  :src="
+                    `http://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`
+                  "
+                />
+              </q-card-section>
+            </q-card-section>
+
+            <q-separator />
+
+            <q-card-actions class="row justify-between">
+              <q-btn
+                type="a"
+                external
+                target="_BLANK"
+                :href="`https://openlibrary.org${book.key}`"
+                label="More Info"
+                unelevated
+                color="primary"
+              />
+              <q-btn unelevated color="secondary" @click="handleSelect(book)">
+                Select
+              </q-btn>
+            </q-card-actions>
+          </q-card>
+          <!-- {{ book.author_name }}
         {{ book.cover_i }}
         <img :src="`http://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`" /> -->
+        </div>
+      </div>
+      <div class="col-4">
+        <q-banner class="q-my-md bg-secondary text-white">
+          Recent Entries
+        </q-banner>
+        <q-list v-if="recentEntries.length > 0" bordered separator padding>
+          <q-item v-for="read in recentEntries" :key="read.title + read.date">
+            <q-item-section>
+              <q-item-label overline>{{ read.date }} </q-item-label>
+              <q-item-label>{{ read.title }} </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+        <em v-else class="text-center"> No Recent Entries </em>
+      </div>
     </div>
     <q-dialog v-model="chooseDialog">
       <q-card style="width: 300px" class="q-px-sm q-pb-md">
@@ -117,7 +137,13 @@
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn unelevated color="primary" label="Submit" type="submit" />
+            <q-btn
+              unelevated
+              color="primary"
+              label="Submit"
+              type="submit"
+              :loading="submitting"
+            />
           </q-card-actions>
         </q-form>
       </q-card>
@@ -136,9 +162,11 @@ export default {
       initials: "",
       submitterComment: "",
       loading: false,
+      recentEntries: [],
       results: [],
       searchTerm: "",
-      selectedBook: {}
+      selectedBook: {},
+      submitting: false
     };
   },
 
@@ -171,6 +199,8 @@ export default {
 
     // This sucks, update author -> book -> read
     async handleReadSubmit() {
+      this.submitting = true;
+
       await Promise.allSettled(
         this.selectedBook.author_key.map((key, i) => {
           return this.$axios.post("/authors/", {
@@ -207,6 +237,16 @@ export default {
 
       this.submitterComment = "";
       this.chooseDialog = false;
+      this.results = [];
+      this.recentEntries.unshift({
+        title: this.selectedBook.title,
+        date: this.date
+      });
+      this.searchTerm = "";
+      this.submitting = false;
+
+      await this.$nextTick();
+      this.$refs.search.focus();
     },
 
     async handleSearch() {
