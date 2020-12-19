@@ -1,5 +1,5 @@
 <template>
-  <q-page style="margin: auto; max-width: 400px">
+  <q-page class="q-pa-sm" style="margin: auto; max-width: 400px">
     <router-link
       v-for="year in years"
       :key="year.year"

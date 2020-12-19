@@ -1,5 +1,5 @@
 <template>
-  <q-page style="margin: auto; max-width: 400px">
+  <q-page class="q-pa-sm" style="margin: auto; max-width: 400px">
     <div class="row justify-between q-my-sm">
       <q-btn
         color="secondary"
