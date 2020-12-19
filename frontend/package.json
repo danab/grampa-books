@@ -1,9 +1,9 @@
 {
-  "name": "grampa-books",
+  "name": "JFS Book Log",
   "version": "0.0.1",
   "description": "Book List for Grampa",
   "productName": "grampa-books",
-  "author": "Dana Bennett <dana.bennett@braves.com>",
+  "author": "Dana Bennett <danabennett10@gmail.com>",
   "private": true,
   "scripts": {
     "build": "quasar build",

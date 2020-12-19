@@ -13,7 +13,7 @@
 
         <q-toolbar-title>
           <router-link class="revert-link" to="/">
-            Grampa's Books
+            JFS Book Log
           </router-link>
         </q-toolbar-title>
 
