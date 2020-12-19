@@ -7,6 +7,8 @@ services:
       - gateway
     ports:
       - "5042:5042"
+    volumes:
+      - ./api/db:/opt/api/db
   app:
     build: "./frontend"
     depends_on:
