@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-sm">
     <div class="row q-col-gutter-md">
-      <div class="col-8">
+      <div class="col-12 col-md-8">
         <q-form class="row q-my-md" @submit="handleSearch">
           <q-input
             ref="search"
@@ -83,7 +83,7 @@
         <img :src="`http://covers.openlibrary.org/b/ID/${book.cover_i}-M.jpg`" /> -->
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-12 col-md-4">
         <q-banner class="q-my-md bg-secondary text-white">
           Recent Entries
         </q-banner>
@@ -244,7 +244,7 @@ export default {
       searchTerm: "",
       selectedBook: {},
       submitting: false,
-      unmatchedModal: true
+      unmatchedModal: false
     };
   },
 
