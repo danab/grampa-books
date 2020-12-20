@@ -84,6 +84,22 @@ def read_years(db: Session = Depends(get_db)):
     return crud.get_read_years(db)
 
 
-@app.get("/reads/year/{year}", response_model=List[schemas.ReadWithBook])
+@app.get("/reads/year/{year}", response_model=schemas.YearReads)
 def read_single_year(year: int, db: Session = Depends(get_db)):
-    return crud.get_read_year(db, year)
+    return {
+        "reads": crud.get_read_year(db, year),
+        "unmatched": crud.get_unmatched_list_by_year(db, year),
+    }
+
+
+@app.get("/unmatched_reads/")  # , response_model=List[schemas.ReadWithBook])
+def unmatched_read_list(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    read_list = crud.get_unmatched_list(db, skip=skip, limit=limit)
+    return read_list
+
+
+@app.post("/unmatched_reads/", response_model=schemas.UnmatchedRead)
+def create_unmatched_read(
+    read: schemas.UnmatchedReadCreate, db: Session = Depends(get_db)
+):
+    return crud.create_unmatched_read(db=db, read=read)

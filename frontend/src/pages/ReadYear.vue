@@ -19,12 +19,13 @@
     <div v-if="loaded" class="q-mb-xl">
       <div class="text-h2 q-mt-md">{{ year }}</div>
       <div class="text-subtitle1 q-mt-sm q-mb-md">
-        {{ reads.length }} {{ reads.length === 1 ? "book" : "books" }}
-        {{ reads.length > 0 ? "read" : "entered" }}
+        {{ combinedReads.length }}
+        {{ combinedReads.length === 1 ? "book" : "books" }}
+        {{ combinedReads.length > 0 ? "read" : "entered" }}
       </div>
       <q-card
-        v-for="read in reads"
-        :key="read.book.key"
+        v-for="read in combinedReads"
+        :key="read.book.ol_id"
         class="col-12 q-mb-sm"
         flat
         bordered
@@ -40,6 +41,7 @@
 
           <q-card-section class="col-4">
             <a
+              v-if="!read.unmatched"
               target="_BLANK"
               :href="`https://openlibrary.org${read.book.work_id}`"
             >
@@ -73,8 +75,38 @@ export default {
   data() {
     return {
       loaded: false,
-      reads: []
+      reads: [],
+      unmatched: []
     };
+  },
+
+  computed: {
+    combinedReads() {
+      let i = 0;
+      let j = 0;
+
+      let combo = [];
+      while (i < this.reads.length || j < this.unmatched.length) {
+        if (!this.reads[i] || this.reads[i].date > this.unmatched[j].date) {
+          const fakeRead = {
+            unmatched: true,
+            date: this.unmatched[j].date,
+            book: {
+              ol_id: "fake" + this.unmatched[j].read_key,
+              title: this.unmatched[j].title,
+              authors: [{ name: this.unmatched[j].author }]
+            }
+          };
+          combo.push(fakeRead);
+          j += 1;
+        } else {
+          combo.push(this.reads[i]);
+          i += 1;
+        }
+      }
+
+      return combo;
+    }
   },
 
   async mounted() {
@@ -85,13 +117,13 @@ export default {
     async getReads(year) {
       this.loaded = false;
       const { data } = await this.$axios.get(`/reads/year/${year}`);
-      this.reads = data;
+      this.reads = data.reads;
+      this.unmatched = data.unmatched;
       this.loaded = true;
     }
   },
 
   beforeRouteUpdate(to, from, next) {
-    console.log(to.params.year);
     this.getReads(to.params.year);
 
     next();

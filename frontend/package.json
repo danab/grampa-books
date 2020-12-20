@@ -2,7 +2,7 @@
   "name": "JFS Book Log",
   "version": "0.0.1",
   "description": "Book List for Grampa",
-  "productName": "grampa-books",
+  "productName": "JFS Book Log",
   "author": "Dana Bennett <danabennett10@gmail.com>",
   "private": true,
   "scripts": {

@@ -68,3 +68,27 @@ class YearCount(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UnmatchedReadBase(BaseModel):
+    date: datetime.date
+    title: str
+    author: str = None
+    submitter_comment: str
+    initials: str
+
+
+class UnmatchedReadCreate(UnmatchedReadBase):
+    pass
+
+
+class UnmatchedRead(UnmatchedReadBase):
+    read_key: int
+
+    class Config:
+        orm_mode = True
+
+
+class YearReads(BaseModel):
+    reads: List[ReadWithBook]
+    unmatched: List[UnmatchedRead]

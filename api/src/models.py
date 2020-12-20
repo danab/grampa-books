@@ -56,3 +56,15 @@ class Read(Base):
     created = Column(DateTime, server_default=func.now())
 
     book = relationship("Book", back_populates="reads")
+
+
+class UnmatchedRead(Base):
+    __tablename__ = "unmatched_reads"
+
+    read_key = Column(Integer, primary_key=True)
+    date = Column(Date, index=True)
+    title = Column(String, index=True)
+    author = Column(String, index=True)
+    submitter_comment = Column(String)
+    initials = Column(String)
+    created = Column(DateTime, server_default=func.now())

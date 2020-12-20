@@ -18,6 +18,15 @@
             color="primary"
           />
         </q-form>
+        <div class="q-my-sm">
+          Can't find what you are looking for? Click
+          <span
+            class="text-underline text-primary text-bold cursor-pointer"
+            @click="unmatchedModal = true"
+          >
+            here
+          </span>
+        </div>
         <div v-if="!loading" class="row">
           <q-card
             v-for="book in filteredResults"
@@ -148,6 +157,72 @@
         </q-form>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="unmatchedModal">
+      <q-card style="width: 300px" class="q-px-sm q-pb-md">
+        <q-card-section class="q-pb-sm">
+          <div class="text-h6">Missing Book</div>
+        </q-card-section>
+
+        <q-form @submit="handleUnmatchedSubmit">
+          <q-card-section class="q-pt-none">
+            <q-input
+              v-model="date"
+              hide-bottom-space
+              label="Read Date"
+              :rules="[required('Choose a Date')]"
+            >
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy
+                    ref="qDateProxyStart"
+                    transition-show="scale"
+                    transition-hide="scale"
+                  >
+                    <q-date v-model="date" mask="YYYY-MM-DD">
+                      <div class="row items-center justify-end">
+                        <q-btn
+                          v-close-popup
+                          label="Close"
+                          color="primary"
+                          flat
+                        />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+            <q-input
+              v-model="missingTitle"
+              label="Title"
+              :rules="[val => !!val || 'Title is required']"
+            />
+            <q-input
+              v-model="missingAuthor"
+              label="Author"
+              :rules="[val => !!val || 'Author is required']"
+            />
+            <q-input
+              v-model="submitterComment"
+              label="Submitter Comment"
+              type="textarea"
+              rows="2"
+            />
+            <q-input v-model="initials" label="Initials" />
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn
+              unelevated
+              color="primary"
+              label="Submit"
+              type="submit"
+              :loading="submitting"
+            />
+          </q-card-actions>
+        </q-form>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
@@ -160,13 +235,16 @@ export default {
       chooseDialog: false,
       date: "2020-12-13",
       initials: "",
+      missingTitle: "",
+      missingAuthor: "",
       submitterComment: "",
       loading: false,
       recentEntries: [],
       results: [],
       searchTerm: "",
       selectedBook: {},
-      submitting: false
+      submitting: false,
+      unmatchedModal: true
     };
   },
 
@@ -175,9 +253,6 @@ export default {
     filteredResults() {
       return this.results
         .filter(book => {
-          if (!book.language?.includes("eng")) {
-            console.log(JSON.parse(JSON.stringify(book)));
-          }
           return (
             book.author_name?.length &&
             (!book.language || book.language.includes("eng"))
@@ -249,6 +324,37 @@ export default {
       this.$refs.search.focus();
     },
 
+    async handleUnmatchedSubmit() {
+      this.submitting = true;
+
+      try {
+        await this.$axios.post("/unmatched_reads/", {
+          date: this.date,
+          title: this.missingTitle,
+          author: this.missingAuthor,
+          submitter_comment: this.submitterComment,
+          initials: this.initials
+        });
+      } catch (e) {
+        throw new Error("An error occurred!");
+      }
+
+      this.submitterComment = "";
+      this.unmatchedModal = false;
+      this.results = [];
+      this.recentEntries.unshift({
+        title: this.missingTitle,
+        date: this.date
+      });
+      this.missingTitle = "";
+      this.missingAuthor = "";
+      this.searchTerm = "";
+      this.submitting = false;
+
+      await this.$nextTick();
+      this.$refs.search.focus();
+    },
+
     async handleSearch() {
       const url = `http://openlibrary.org/search.json?q=${this.searchTerm}`;
 
@@ -266,3 +372,8 @@ export default {
   }
 };
 </script>
+
+<style lang="sass" scoped>
+.text-underline
+  text-decoration: underline
+</style>

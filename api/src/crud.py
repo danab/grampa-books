@@ -49,6 +49,26 @@ def get_list(db: Session, skip: int = 0, limit: int = 100):
     )
 
 
+def get_unmatched_list(db: Session, skip: int = 0, limit: int = 100):
+    return (
+        db.query(models.UnmatchedRead)
+        .order_by(models.UnmatchedRead.date)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def get_unmatched_list_by_year(db: Session, year: int):
+    yearFunc = func.substr(models.UnmatchedRead.date, 1, 4)
+    return (
+        db.query(models.UnmatchedRead)
+        .filter(yearFunc == func.cast(year, String))
+        .order_by(models.UnmatchedRead.date)
+        .all()
+    )
+
+
 def create_book(db: Session, book: schemas.BookCreate):
     authors = (
         db.query(models.Author)
@@ -76,14 +96,41 @@ def create_read(db: Session, read: schemas.ReadCreate):
     return db_read
 
 
+def create_unmatched_read(db: Session, read: schemas.UnmatchedReadCreate):
+    db_read = models.UnmatchedRead(**read.dict())
+    db.add(db_read)
+    db.commit()
+    db.refresh(db_read)
+    return db_read
+
+
+# Bleh, this is a mess
 def get_read_years(db: Session):
     year = func.substr(models.Read.date, 1, 4)
-    return (
+    reads = (
         db.query(year.label("year"), func.count(year).label("num"))
         .group_by(year)
         .order_by(year)
         .all()
     )
+
+    read_map = {read[0]: read[1] for read in reads}
+
+    year = func.substr(models.UnmatchedRead.date, 1, 4)
+    unmatched = (
+        db.query(year.label("year"), func.count(year).label("num"))
+        .group_by(year)
+        .order_by(year)
+        .all()
+    )
+
+    for read in unmatched:
+        if read[0] in read_map.keys():
+            read_map[read[0]] += read[1]
+        else:
+            read_map[read[0]] = read[1]
+
+    return [{"year": year, "num": read_map[year]} for year in sorted(read_map.keys())]
 
 
 def get_read_year(db: Session, year):
