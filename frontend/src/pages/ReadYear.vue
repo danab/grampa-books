@@ -87,7 +87,10 @@ export default {
 
       let combo = [];
       while (i < this.reads.length || j < this.unmatched.length) {
-        if (!this.reads[i] || this.reads[i].date > this.unmatched[j].date) {
+        if (
+          !this.reads[i] ||
+          (this.unmatched[j] && this.reads[i].date > this.unmatched[j].date)
+        ) {
           const fakeRead = {
             unmatched: true,
             date: this.unmatched[j].date,
