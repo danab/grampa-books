@@ -10,22 +10,6 @@
           <div class="text-subtitle2">
             {{ authors }}
           </div>
-          <div class="q-mt-md">
-            This book was read
-            <span class="text-red">{{ work.reads.length }}</span>
-            {{ work.reads.length === 1 ? "time" : "times" }}
-            <ul>
-              <li v-for="read in work.reads" :key="read.date">
-                <router-link
-                  class="text-bold"
-                  :to="`/read/${read.date.slice(0, 4)}`"
-                >
-                  {{ read.date }}
-                </router-link>
-                - <q-btn flat label="Edit Date" @click="editDate(read)" />
-              </li>
-            </ul>
-          </div>
         </q-card-section>
 
         <q-space />
@@ -40,6 +24,37 @@
 
       <q-separator />
     </q-card>
+    <div class="q-mt-md row">
+      <div class="text-h5 col-12">
+        Dates
+      </div>
+      <div class="col-12 q-mb-sm">
+        This book was read
+        <span class="text-red">{{ work.reads.length }}</span>
+        {{ work.reads.length === 1 ? "time" : "times" }}
+      </div>
+      <q-list class="col-12" bordered padding>
+        <q-item v-for="read in work.reads" :key="read.date">
+          <q-item-section avatar>
+            <router-link
+              class="text-bold revert-link"
+              :to="`/read/${read.date.slice(0, 4)}`"
+            >
+              {{ read.date.slice(0, 4) }}
+            </router-link>
+          </q-item-section>
+          <q-item-section>{{ readDate(read) }} </q-item-section>
+          <q-item-section side>
+            <q-item-label caption>
+              <q-btn flat label="Edit Date" @click="editDate(read)" />
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+        <!-- <li v-for="read in work.reads" :key="read.date">
+          - <q-btn flat label="Edit Date" @click="editDate(read)" />
+        </li> -->
+      </q-list>
+    </div>
 
     <q-dialog v-model="editDialog">
       <q-card style="width: 300px" class="q-px-sm q-pb-md">
@@ -105,6 +120,8 @@
 </template>
 
 <script>
+import { date } from "quasar";
+
 export default {
   name: "Work",
 
@@ -161,6 +178,13 @@ export default {
       const idx = this.work.reads.findIndex(read => read === this.editRead);
 
       this.work.reads[idx].date = this.newDate;
+    },
+
+    readDate(read) {
+      // Timezones...
+      const datetime = date.extractDate(read.date, "YYYY-MM-DD");
+
+      return date.formatDate(datetime, "MMM Do");
     }
   }
 };
