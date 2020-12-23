@@ -1,6 +1,7 @@
+import datetime
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Body, Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from starlette.middleware.cors import CORSMiddleware
 
@@ -65,6 +66,12 @@ def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return books
 
 
+@app.get("/books/{work_id}", response_model=schemas.BookWithReads)
+def read_book(work_id: str, db: Session = Depends(get_db)):
+    book = crud.get_book(db, "/works/" + work_id)
+    return book
+
+
 @app.get("/reads/", response_model=List[schemas.ReadWithBook])
 def read_list(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     read_list = crud.get_list(db, skip=skip, limit=limit)
@@ -103,3 +110,16 @@ def create_unmatched_read(
     read: schemas.UnmatchedReadCreate, db: Session = Depends(get_db)
 ):
     return crud.create_unmatched_read(db=db, read=read)
+
+
+@app.post("/edit_read_date/", response_model=schemas.ReadWithBook)
+def edit_read_date(
+    date: datetime.date = Body(...),
+    book_id: str = Body(...),
+    new_date: datetime.date = Body(...),
+    db: Session = Depends(get_db),
+):
+    db_read = crud.get_read(db, date=date, book="/works/" + book_id)
+    if not db_read:
+        raise HTTPException(status_code=400, detail="can't find read")
+    return crud.edit_read(db, db_read, new_date)

@@ -92,3 +92,7 @@ class UnmatchedRead(UnmatchedReadBase):
 class YearReads(BaseModel):
     reads: List[ReadWithBook]
     unmatched: List[UnmatchedRead]
+
+
+class BookWithReads(BookWithAuthor):
+    reads: List[Read]

@@ -38,6 +38,10 @@ def get_books(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Book).offset(skip).limit(limit).all()
 
 
+def get_book(db: Session, work_id: str):
+    return db.query(models.Book).filter(models.Book.work_id == work_id).one()
+
+
 def get_list(db: Session, skip: int = 0, limit: int = 100):
     return (
         db.query(models.Read)
@@ -142,3 +146,10 @@ def get_read_year(db: Session, year):
         .order_by(models.Read.date)
         .all()
     )
+
+
+def edit_read(db: Session, read: models.Read, new_date: datetime.date):
+    read.date = new_date
+    db.commit()
+    db.refresh(read)
+    return read

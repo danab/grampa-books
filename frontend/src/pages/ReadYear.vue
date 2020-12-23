@@ -33,7 +33,15 @@
         <q-card-section horizontal>
           <q-card-section class="q-pt-xs">
             <div class="text-overline">{{ read.date.slice(5) }}</div>
-            <div class="text-h5 q-mt-sm q-mb-xs">{{ read.book.title }}</div>
+            <component
+              :is="read.unmatched ? 'span' : 'router-link'"
+              class="revert-link"
+              :to="read.ol_book_id"
+            >
+              <div class="text-h5 q-mt-sm q-mb-xs">
+                {{ read.book.title }}
+              </div>
+            </component>
             <div class="text-subtitle2">{{ read.book.authors[0].name }}</div>
           </q-card-section>
 

@@ -9,6 +9,11 @@ const routes = [
         path: "read/:year",
         component: () => import("pages/ReadYear.vue"),
         props: route => ({ year: Number(route.params.year) })
+      },
+      {
+        path: "works/:id",
+        component: () => import("pages/Work.vue"),
+        props: true
       }
     ]
   },
