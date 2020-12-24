@@ -1,5 +1,12 @@
 <template>
   <q-page class="q-pa-sm" style="margin: auto; max-width: 400px">
+    <div class="q-mt-sm text-h5 text-center">
+      <span class="text-indigo">{{ totalBooks }}</span> books from
+      <span class="text-deep-purple">{{ totalYears }}</span> years
+    </div>
+    <div class="text-subtitle1 text-center">
+      (have been entered so far)
+    </div>
     <router-link
       v-for="year in years"
       :key="year.year"
@@ -23,6 +30,20 @@ export default {
       loaded: false,
       years: []
     };
+  },
+
+  computed: {
+    totalBooks() {
+      let books = 0;
+      this.years.forEach(year => {
+        books += year.num;
+      });
+      return books;
+    },
+
+    totalYears() {
+      return this.years.length;
+    }
   },
 
   async mounted() {
