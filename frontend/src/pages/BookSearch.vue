@@ -26,8 +26,11 @@
             </router-link>
           </div>
           <div class="text-subtitle1">
-            <router-link :to="'/authors/' + book.authors[0].ol_id">
-              author
+            <router-link
+              class="revert-link"
+              :to="'/authors/' + book.authors[0].ol_id"
+            >
+              {{ book.authors[0].name }}
             </router-link>
           </div>
         </q-card-section>
