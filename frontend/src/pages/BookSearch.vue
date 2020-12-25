@@ -26,7 +26,9 @@
             </router-link>
           </div>
           <div class="text-subtitle1">
-            {{ authors(book.authors) }}
+            <router-link :to="'/authors/' + book.authors[0].ol_id">
+              author
+            </router-link>
           </div>
         </q-card-section>
       </q-card>
@@ -58,10 +60,6 @@ export default {
   },
 
   methods: {
-    authors(authors) {
-      return authors.map(author => author.name).join(", ");
-    },
-
     async fetchData(title) {
       this.loading = true;
       this.initialSearch = true;

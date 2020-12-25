@@ -8,7 +8,13 @@
             {{ work.title }}
           </div>
           <div class="text-subtitle2">
-            {{ authors }}
+            <span v-for="(author, index) in work.authors" :key="index">
+              <router-link
+                class="revert-link"
+                :to="'/authors/' + author.ol_id"
+                >{{ author.name }}</router-link
+              ><template v-if="index + 1 < work.authors.length">, </template>
+            </span>
           </div>
         </q-card-section>
 

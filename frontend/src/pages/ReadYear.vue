@@ -42,7 +42,18 @@
                 {{ read.book.title }}
               </div>
             </component>
-            <div class="text-subtitle2">{{ read.book.authors[0].name }}</div>
+            <div class="text-subtitle2">
+              <span v-for="(author, index) in read.book.authors" :key="index">
+                <component
+                  :is="read.unmatched ? 'span' : 'router-link'"
+                  class="revert-link"
+                  :to="'/authors/' + author.ol_id"
+                  >{{ author.name }}</component
+                ><template v-if="index + 1 < read.book.authors.length"
+                  >,
+                </template>
+              </span>
+            </div>
           </q-card-section>
 
           <q-space />
