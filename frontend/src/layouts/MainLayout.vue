@@ -17,7 +17,7 @@
           </router-link>
         </q-toolbar-title>
 
-        <div>v0.1</div>
+        <q-btn flat icon="search" to="/search" />
       </q-toolbar>
     </q-header>
 
@@ -51,15 +51,15 @@ import EssentialLink from "components/EssentialLink.vue";
 const linksData = [
   {
     title: "Search",
-    caption: "Data Entry",
+    caption: "Search Books",
     icon: "search",
-    link: "/"
+    link: "/search"
   },
   {
-    title: "List",
+    title: "Home",
     caption: "By Year",
     icon: "book",
-    link: "/read"
+    link: "/"
   }
 ];
 
