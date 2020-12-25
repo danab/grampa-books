@@ -38,6 +38,15 @@ def get_books(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Book).offset(skip).limit(limit).all()
 
 
+def search_books(db: Session, title: str):
+    return (
+        db.query(models.Book)
+        .filter(models.Book.title.ilike("%" + title + "%"))
+        .order_by(models.Book.title)
+        .all()
+    )
+
+
 def get_list(db: Session, skip: int = 0, limit: int = 100):
     return (
         db.query(models.Read)

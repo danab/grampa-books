@@ -66,6 +66,12 @@ def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return books
 
 
+@app.get("/books/search", response_model=List[schemas.BookWithAuthor])
+def search_books(title: str, db: Session = Depends(get_db)):
+    books = crud.search_books(db, title)
+    return books
+
+
 @app.get("/books/{work_id}", response_model=schemas.BookWithReads)
 def read_book(work_id: str, db: Session = Depends(get_db)):
     book = crud.get_book(db, "/works/" + work_id)
