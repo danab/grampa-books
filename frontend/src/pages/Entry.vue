@@ -110,6 +110,7 @@
         <q-form @submit="handleReadSubmit">
           <q-card-section class="q-pt-none">
             <q-input
+              ref="dateInput"
               v-model="date"
               hide-bottom-space
               label="Read Date"
@@ -267,9 +268,11 @@ export default {
   },
 
   methods: {
-    handleSelect(book) {
+    async handleSelect(book) {
       this.selectedBook = book;
       this.chooseDialog = true;
+      await this.$nextTick();
+      this.$refs.dateInput.focus();
     },
 
     // This sucks, update author -> book -> read
