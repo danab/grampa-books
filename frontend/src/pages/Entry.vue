@@ -91,7 +91,15 @@
           <q-item v-for="read in recentEntries" :key="read.title + read.date">
             <q-item-section>
               <q-item-label overline>{{ read.date }} </q-item-label>
-              <q-item-label>{{ read.title }} </q-item-label>
+              <q-item-label>
+                <component
+                  :is="read.id ? 'router-link' : 'span'"
+                  class="revert-link"
+                  :to="read.id"
+                >
+                  {{ read.title }}
+                </component>
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -99,7 +107,7 @@
       </div>
     </div>
     <q-dialog v-model="chooseDialog">
-      <q-card style="width: 300px" class="q-px-sm q-pb-md">
+      <q-card class="q-px-sm q-pb-md">
         <q-card-section class="q-pb-sm">
           <div class="text-h6">{{ selectedBook.title }}</div>
           <div class="text-bolder">
@@ -234,13 +242,16 @@ export default {
   data() {
     return {
       chooseDialog: false,
-      date: "2020-12-13",
-      initials: "",
+      date: localStorage.getItem("lastDate") || "2020-12-25",
+      initials: localStorage.getItem("initials") || "",
       missingTitle: "",
       missingAuthor: "",
       submitterComment: "",
       loading: false,
-      recentEntries: [],
+      recentEntries: JSON.parse(localStorage.getItem("entries") || "[]").slice(
+        0,
+        10
+      ),
       results: [],
       searchTerm: "",
       selectedBook: {},
@@ -318,10 +329,14 @@ export default {
       this.results = [];
       this.recentEntries.unshift({
         title: this.selectedBook.title,
+        id: this.selectedBook.key,
         date: this.date
       });
+
       this.searchTerm = "";
       this.submitting = false;
+
+      this.saveLocally();
 
       await this.$nextTick();
       this.$refs.search.focus();
@@ -371,6 +386,15 @@ export default {
 
     required(errorMsg) {
       return val => (val !== null && val !== "") || errorMsg;
+    },
+
+    saveLocally() {
+      localStorage.setItem("initials", this.initials);
+      localStorage.setItem("lastDate", this.date);
+
+      const books = JSON.parse(localStorage.getItem("entries") || "[]");
+      books.unshift(this.recentEntries[0]);
+      localStorage.setItem("entries", JSON.stringify(books));
     }
   }
 };
