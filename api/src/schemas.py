@@ -70,6 +70,14 @@ class YearCount(BaseModel):
         orm_mode = True
 
 
+class LeaderCount(BaseModel):
+    initials: str
+    num: int
+
+    class Config:
+        orm_mode = True
+
+
 class UnmatchedReadBase(BaseModel):
     date: datetime.date
     title: str

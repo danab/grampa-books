@@ -105,6 +105,12 @@ def read_single_year(year: int, db: Session = Depends(get_db)):
     }
 
 
+@app.get("/leaderboard/", response_model=List[schemas.LeaderCount])
+def read_leaderboard(db: Session = Depends(get_db)):
+    leaderboard = crud.get_leaderboard(db)
+    return leaderboard
+
+
 @app.get("/unmatched_reads/")  # , response_model=List[schemas.ReadWithBook])
 def unmatched_read_list(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     read_list = crud.get_unmatched_list(db, skip=skip, limit=limit)

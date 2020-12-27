@@ -158,3 +158,15 @@ def edit_read(db: Session, read: models.Read, new_date: datetime.date):
     db.commit()
     db.refresh(read)
     return read
+
+
+def get_leaderboard(db: Session):
+    inits = func.upper(models.Read.initials)
+    leaders = (
+        db.query(inits.label("initials"), func.count(inits).label("num"))
+        .group_by(inits)
+        .order_by(func.count(inits).desc())
+        .all()
+    )
+
+    return leaders

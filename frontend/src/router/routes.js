@@ -6,6 +6,7 @@ const routes = [
       { path: "entry", component: () => import("pages/Entry.vue") },
       { path: "", component: () => import("pages/Read.vue") },
       { path: "search", component: () => import("pages/BookSearch.vue") },
+      { path: "leaderboard", component: () => import("pages/Leaderboard.vue") },
       {
         path: "read/:year",
         component: () => import("pages/ReadYear.vue"),
