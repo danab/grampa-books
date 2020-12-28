@@ -38,7 +38,7 @@ export default {
   },
 
   async mounted() {
-    const { data } = await this.$axios.get("/authors/top/");
+    const { data } = await this.$axios.get("/authors/top");
 
     this.loaded = true;
     this.authors = data;
