@@ -170,3 +170,31 @@ def get_leaderboard(db: Session):
     )
 
     return leaders
+
+
+def get_top_books(db: Session):
+    num = func.count(models.Read.ol_book_id).label("num")
+    return (
+        db.query(models.Book)
+        .join(models.Read)
+        .options(joinedload(models.Book.authors))
+        .group_by(models.Book)
+        .order_by(num.desc(), models.Book.title)
+        .having(num > 1)
+        .all()
+    )
+
+
+def get_top_authors(db: Session):
+    num = func.count(models.Read.ol_book_id).label("num")
+    return (
+        db.query(models.Author)
+        .join(models.association_table)
+        .join(models.Book)
+        .join(models.Read)
+        .options(joinedload(models.Author.books).options(joinedload(models.Book.reads)))
+        .group_by(models.Author)
+        .order_by(num.desc(), models.Author.name)
+        .having(num > 1)
+        .all()
+    )

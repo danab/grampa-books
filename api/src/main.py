@@ -44,6 +44,12 @@ def read_authors(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     return authors
 
 
+@app.get("/authors/top", response_model=List[schemas.AuthorWithReads])
+def get_top_authors(db: Session = Depends(get_db)):
+    authors = crud.get_top_authors(db)
+    return authors
+
+
 @app.get("/authors/{author_id}", response_model=schemas.AuthorWithBooks)
 def read_author(author_id: str, db: Session = Depends(get_db)):
     db_author = crud.get_author(db, author_id=author_id)
@@ -69,6 +75,12 @@ def read_books(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @app.get("/books/search", response_model=List[schemas.BookWithAuthor])
 def search_books(title: str, db: Session = Depends(get_db)):
     books = crud.search_books(db, title)
+    return books
+
+
+@app.get("/books/top", response_model=List[schemas.BookWithReads])
+def get_top_books(db: Session = Depends(get_db)):
+    books = crud.get_top_books(db)
     return books
 
 

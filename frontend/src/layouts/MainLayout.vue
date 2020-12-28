@@ -56,6 +56,18 @@ const linksData = [
     link: "/search"
   },
   {
+    title: "Top Books",
+    caption: "By Times Read",
+    icon: "leaderboard",
+    link: "/top-books"
+  },
+  {
+    title: "Top Authors",
+    caption: "By Times Read",
+    icon: "star_border",
+    link: "/top-authors"
+  },
+  {
     title: "Home",
     caption: "By Year",
     icon: "book",

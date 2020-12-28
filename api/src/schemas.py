@@ -104,3 +104,10 @@ class YearReads(BaseModel):
 
 class BookWithReads(BookWithAuthor):
     reads: List[Read]
+
+
+class AuthorWithReads(Author):
+    books: List[BookWithReads]
+
+    class Config:
+        orm_mode = True
