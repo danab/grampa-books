@@ -26,7 +26,7 @@ class Book(Base):
 
     work_id = Column(String, primary_key=True, index=True)
     edition_id = Column(String, index=True)
-    title = Column(String, unique=True, index=True)
+    title = Column(String, index=True)
     image_id = Column(String)
     created = Column(DateTime, server_default=func.now())
 
